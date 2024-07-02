@@ -9,8 +9,11 @@ class App {
     this.plane = document.querySelector('#plane');
     this.GUI = new LilGUI();
     this.registerComponent();
+    this.sphere = document.getElementById("sphere");
+  
 
     this.initGUI();
+    this.envMapInit()
   }
 
   registerComponent() {
@@ -158,13 +161,12 @@ class App {
       }
     });
 
-    
-    
+
 
   }
 
   initGUI() {
-    
+
     const addJenkisButton = this.GUI.add({
       addJenkis: () => {
         if (!this.jenkis) {
@@ -256,6 +258,19 @@ class App {
 
 
 
+  }
+
+  envMapInit() {
+    setTimeout(() => {
+      const envMap = new THREE.CubeTextureLoader()
+      .setPath('textures/reflection/')
+      .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
+  
+     
+      this.sphere.getObject3D('mesh').material.envMap = envMap;
+      this.sphere.getObject3D('mesh').material.refractionRatio = 0.5;
+    }, 1000)
+  
   }
 
 }
