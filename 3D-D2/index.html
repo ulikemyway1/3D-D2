@@ -1,14 +1,33 @@
 <html>
   <head>
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="main.js" type="module"></script>
   </head>
   <body>
     <a-scene>
-      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
-      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
-      <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
-      <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
-      <a-sky color="#ECECEC"></a-sky>
+      <a-assets>
+        <a-asset-item id="model" src="models/Jenkins.gltf"></a-asset-item>
+        <a-asset-item id="speaker" src="models/speakers.glb"></a-asset-item>
+        <audio id="music" src="music/music.webm"></audio>
+        <img id="skyTexture" src="textures/surounding.jpg">
+        <a-cubemap id="reflection">
+          <img src="textures/reflection/px.jpg">
+          <img src="textures/reflection/nx.jpg">
+          <img src="textures/reflection/py.jpg">
+          <img src="textures/reflection/ny.jpg">
+          <img src="textures/reflection/pz.jpg">
+          <img src="textures/reflection/nz.jpg">
+        </a-cubemap>
+      </a-assets>
+
+      <a-entity id="camera" camera look-controls position="0 1.6 0"></a-entity>
+      <a-entity cursor="rayOrigin: mouse" raycaster="objects: #plane, #jenkis, #sphere, #speaker; showLine: true; lineColor: red; lineOpacity: 0.5"></a-entity>
+      <a-plane id="plane" position="0 0 0" rotation="-90 0 0" width="16" height="16" material="color: #000000; opacity: 0;" click-to-move-jankis></a-plane>
+      <a-sky src="#skyTexture"></a-sky>
+      <a-sphere id="sphere" position="0 1.25 -5" radius="1.25" src="textures/surounding.jpg" mouse-rotate></a-sphere>
+      <a-entity id="speaker" gltf-model="#speaker"  position="3.5 0 -8" sound="src: #music; autoplay: false;" play-music mouse-rotate></a-entity>
     </a-scene>
+
+    <div id="debugPanel" style="position: absolute; top: 10px; left: 10px; background-color: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 5px;"></div>
   </body>
 </html>
