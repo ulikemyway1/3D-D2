@@ -1,4 +1,6 @@
 import LilGUI from 'lil-gui';
+import Jenkis from './public/animation/jenkis';
+
 
 class App {
 
@@ -10,7 +12,7 @@ class App {
     this.GUI = new LilGUI();
     this.registerComponent();
     this.sphere = document.getElementById("sphere");
-  
+    this.jenkisSpawnAnimation = null;
 
     this.initGUI();
     this.envMapInit()
@@ -26,6 +28,12 @@ class App {
           if (intersection && this.jenkis) {
             const point = intersection.point;
             this.jenkis.setAttribute('position', point);
+            this.jenkisSpawnAnimation.time = 0;
+
+            this.jenkisSpawnAnimation.play();
+            console.log( this.jenkisSpawnAnimation.isRunning())
+            console.log( this.jenkisSpawnAnimation.paused)
+            console.log(this.jenkisSpawnAnimation)
           }
         });
 
@@ -168,34 +176,21 @@ class App {
   initGUI() {
 
     const addJenkisButton = this.GUI.add({
-      addJenkis: () => {
+      addJenkis: async () => {
         if (!this.jenkis) {
-          const jenkis = document.createElement('a-entity');
-          jenkis.setAttribute('gltf-model', '#model');
-          jenkis.setAttribute('scale', '1 1 1');
-          jenkis.setAttribute('position', '0 0 -5');
-          jenkis.setAttribute('shadow', '');
-          jenkis.setAttribute('draggable',"target: #jenkis")
-          jenkis.id = 'jenkis';
+          
+          const jenkisObject =  new Jenkis();
+          const jenkis = jenkisObject.getJenkis();
+          const jenkisRockAnimation = jenkisObject.getRockAnimation();
+          jenkis.then((model) => {
+            this.scene.appendChild(model);
+            this.jenkis = model;
+            this.jenkisSpawnAnimation = jenkisObject.spawn;
+            // jenkisRockAnimation.leftHandAnimation.play()
 
-          jenkis.addEventListener('model-loaded', function() {
-
-            const model = this.getObject3D('mesh');
-            const jenkisPieces = [];
-            let index = 0;
-            model.traverse(function(node) {
-              index++
-              if (index === 38 )
-              jenkisPieces.push(node)
-            });
-
-            console.log( jenkisPieces)
-            handAnimation(jenkisPieces[0])
-          });
-    
-
-          this.scene.appendChild(jenkis);
-          this.jenkis = jenkis;
+          } )
+         
+  
           addJenkisButton.disable();
           deleteJenkinsButton.enable();
         }
@@ -204,21 +199,8 @@ class App {
       }
     }, 'addJenkis').name('Add Jenkis');
 
-    function handAnimation (segment) {
-      let targetRotation = {
-        x: 1.7091365432734693 * (180 / Math.PI),
-        y: 0.3842457317252173 * (180 / Math.PI),
-        z: 1.3930402014111694 * (180 / Math.PI)
-      };
-      
-      gsap.to(segment.rotation, {
-        duration: 10, // Duration of the animation in seconds
-        _x: targetRotation.x,
-        _y: targetRotation.y,
-       _z: targetRotation.z,
-        ease: "power1.inOut" // Easing function for the animation
-      });
-    }
+    
+
 
     const deleteJenkinsButton = this.GUI.add({
       deleteJenkis: () => {
@@ -268,7 +250,7 @@ class App {
   
      
       this.sphere.getObject3D('mesh').material.envMap = envMap;
-      this.sphere.getObject3D('mesh').material.refractionRatio = 0.5;
+      this.sphere.getObject3D('mesh').material.refractionRatio = 2;
     }, 1000)
   
   }
