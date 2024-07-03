@@ -13,6 +13,7 @@ class App {
     this.registerComponent();
     this.sphere = document.getElementById("sphere");
     this.jenkisSpawnAnimation = null;
+    this.jenkisRockAnimation = null;
 
     this.initGUI();
     this.envMapInit()
@@ -29,14 +30,10 @@ class App {
             const point = intersection.point;
             this.jenkis.setAttribute('position', point);
             this.jenkisSpawnAnimation.time = 0;
-
             this.jenkisSpawnAnimation.play();
-            console.log( this.jenkisSpawnAnimation.isRunning())
-            console.log( this.jenkisSpawnAnimation.paused)
-            console.log(this.jenkisSpawnAnimation)
+   
           }
         });
-
       }
     })
 
@@ -168,9 +165,6 @@ class App {
         }
       }
     });
-
-
-
   }
 
   initGUI() {
@@ -181,16 +175,14 @@ class App {
           
           const jenkisObject =  new Jenkis();
           const jenkis = jenkisObject.getJenkis();
-          const jenkisRockAnimation = jenkisObject.getRockAnimation();
+          this.jenkisRockAnimation = jenkisObject.getRockAnimation();
           jenkis.then((model) => {
             this.scene.appendChild(model);
             this.jenkis = model;
             this.jenkisSpawnAnimation = jenkisObject.spawn;
-            // jenkisRockAnimation.leftHandAnimation.play()
-
+      
           } )
          
-  
           addJenkisButton.disable();
           deleteJenkinsButton.enable();
         }
@@ -200,15 +192,13 @@ class App {
     }, 'addJenkis').name('Add Jenkis');
 
     
-
-
     const deleteJenkinsButton = this.GUI.add({
       deleteJenkis: () => {
         if (this.jenkis) {
           this.jenkis.remove();
           this.jenkis = null;
           addJenkisButton.enable();
-          deleteJencisButton.disable();
+          deleteJenkinsButton.disable();
         }
       }
     }, 'deleteJenkis').name('Delete Jenkis');
@@ -231,16 +221,38 @@ class App {
     const jenkinsRock = this.GUI.add({
       rock: () => {
         if (this.jenkis) {
-          console.log(this.jenkis)
+          this.jenkisRockAnimation.leftArmAnimation.play();
+          this.jenkisRockAnimation.leftForeArmAnimation.play();
+          this.jenkisRockAnimation.finger1.play()
+          this.jenkisRockAnimation.finger2.play()
+          this.jenkisRockAnimation.finger3.play()
+          this.jenkisRockAnimation.finger4.play()
+          this.jenkisRockAnimation.finger5.play()
+          this.jenkisRockAnimation.leftShoulderAnimation.play();
+          this.jenkisRockAnimation.neckAnimation.play()
         }
       }
     }, 'rock').name('Rock!!!');
-
-
-
-
-
+    const jenkinsStopRock = this.GUI.add({
+      stopRock: () => {
+        if (this.jenkis) {
+          this.jenkisRockAnimation.leftArmAnimation.pause();
+          this.jenkisRockAnimation.leftForeArmAnimation.pause();
+          this.jenkisRockAnimation.finger1.pause()
+          this.jenkisRockAnimation.finger2.pause()
+          this.jenkisRockAnimation.finger3.pause()
+          this.jenkisRockAnimation.finger4.pause()
+          this.jenkisRockAnimation.finger5.pause()
+          this.jenkisRockAnimation.leftShoulderAnimation.pause();
+          this.jenkisRockAnimation.neckAnimation.pause()
+        }
+      }
+    }, 'stopRock').name('Stop Rock');
+   
   }
+  
+
+  
 
   envMapInit() {
     setTimeout(() => {
