@@ -14,7 +14,7 @@ class App {
     this.sphere = document.getElementById("sphere");
     this.jenkisSpawnAnimation = null;
     this.jenkisRockAnimation = null;
-
+    this.speaker = document.querySelector("a-entity#speaker");
     this.initGUI();
     this.envMapInit()
   }
@@ -99,6 +99,7 @@ class App {
       toggleMusic: function (event) {
         if (this.isPlaying) {
           event.target.components.sound.stopSound();
+          console.log(event.target)
         } else {
           event.target.components.sound.playSound();
         }
@@ -230,9 +231,11 @@ class App {
           this.jenkisRockAnimation.finger5.play()
           this.jenkisRockAnimation.leftShoulderAnimation.play();
           this.jenkisRockAnimation.neckAnimation.play()
+          this.speaker.components.sound.playSound();
         }
       }
     }, 'rock').name('Rock!!!');
+
     const jenkinsStopRock = this.GUI.add({
       stopRock: () => {
         if (this.jenkis) {
@@ -245,6 +248,7 @@ class App {
           this.jenkisRockAnimation.finger5.pause()
           this.jenkisRockAnimation.leftShoulderAnimation.pause();
           this.jenkisRockAnimation.neckAnimation.pause()
+          this.speaker.components.sound.stopSound();
         }
       }
     }, 'stopRock').name('Stop Rock');
